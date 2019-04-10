@@ -1,0 +1,54 @@
+version: "3"
+
+services:
+  nomad-server:
+    build: .
+    command: "nomad agent -config=/etc/nomad.d"
+    privileged: true
+    expose:
+      - "4646"
+      - "4647"
+      - "4648"
+    networks:
+      - cluster_network
+    volumes:
+      - ./server.d/:/etc/nomad.d/
+
+  nomad-follower:
+    build: .
+    command: "nomad agent -config=/etc/nomad.d"
+    privileged: true
+    expose:
+      - "4647"
+      - "4648"
+    networks:
+      - cluster_network
+    volumes:
+      - ./follower.d/:/etc/nomad.d/
+    depends_on:
+      - nomad-server
+
+  nomad-client-dc1:
+    build: .
+    command: bash -c "service docker start && nomad agent -config=/etc/nomad.d"
+    privileged: true
+    networks:
+      - cluster_network
+    volumes:
+      - ./client-dc1.d/:/etc/nomad.d/
+    depends_on:
+      - nomad-server
+
+  nomad-client-dc2:
+    build: .
+    command: bash -c "service docker start && nomad agent -config=/etc/nomad.d"
+    privileged: true
+    networks:
+      - cluster_network
+    volumes:
+      - ./client-dc2.d/:/etc/nomad.d/
+    depends_on:
+      - nomad-server
+
+networks:
+  cluster_network:
