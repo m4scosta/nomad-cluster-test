@@ -30,6 +30,12 @@ Docker compose provisioned Hashicorp Nomad cluster.
       - [ ] LB for Nomad clients
 - [ ] Access web application running inside Nomad via LB
 - [ ] Run periodic jobs on Nomad
+- [ ] Run some synchronous multi service communication
+- [ ] Implement circuit braker, fallback and retry (maybe Envoy will help on this)
+- [ ] Collect and aggregate service logs
+- [ ] Implement distributed tracing
+- [ ] Write an article and talk about this subject to share acquired knowledge
+- [ ] Do all these activities using Kubernetes, GCP, Azure
 
 ## Dependencies
 
