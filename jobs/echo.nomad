@@ -18,7 +18,7 @@ job "echo" {
       }
 
       service {
-        tags = ["http", "echo"]
+        tags = ["http", "echo", "urlprefix-/echo"]
 
         port = "http"
 

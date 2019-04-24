@@ -1,54 +1,54 @@
 version: "3"
 
 services:
+  consul-server:
+    image: consul:latest
+    command: "consul agent -config-file=/etc/consul.d/config.json"
+    volumes:
+      - ./consul/server.d/:/etc/consul.d/
+
   nomad-server:
-    build: .
-    command: "nomad agent -config=/etc/nomad.d"
+    build: ./nomad
     privileged: true
     expose:
       - "4646"
       - "4647"
       - "4648"
-    networks:
-      - cluster_network
+    ports:
+      - "4646:4646"
     volumes:
-      - ./server.d/:/etc/nomad.d/
+      - ./nomad/server.d/:/etc/nomad.d/
+      - ./consul/client.d/:/etc/consul.d/
+    depends_on:
+      - consul-server
 
-  nomad-follower:
-    build: .
-    command: "nomad agent -config=/etc/nomad.d"
+  # just need follower to avoid port 4646 conflict
+  nomad-server-follower:
+    build: ./nomad
     privileged: true
     expose:
       - "4647"
       - "4648"
-    networks:
-      - cluster_network
     volumes:
-      - ./follower.d/:/etc/nomad.d/
+      - ./nomad/server.d/:/etc/nomad.d/
+      - ./consul/client.d/:/etc/consul.d/
     depends_on:
       - nomad-server
 
   nomad-client-dc1:
-    build: .
-    command: bash -c "service docker start && nomad agent -config=/etc/nomad.d"
+    build: ./nomad
     privileged: true
-    networks:
-      - cluster_network
     volumes:
-      - ./client-dc1.d/:/etc/nomad.d/
+      - ./nomad/client-dc1.d/:/etc/nomad.d/
+      - ./consul/client.d/:/etc/consul.d/
     depends_on:
       - nomad-server
 
   nomad-client-dc2:
-    build: .
-    command: bash -c "service docker start && nomad agent -config=/etc/nomad.d"
+    build: ./nomad
     privileged: true
-    networks:
-      - cluster_network
     volumes:
-      - ./client-dc2.d/:/etc/nomad.d/
+      - ./nomad/client-dc2.d/:/etc/nomad.d/
+      - ./consul/client.d/:/etc/consul.d/
     depends_on:
       - nomad-server
-
-networks:
-  cluster_network:

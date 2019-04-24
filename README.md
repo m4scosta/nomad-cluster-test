@@ -2,6 +2,35 @@
 
 Docker compose provisioned Hashicorp Nomad cluster.
 
+## Task List/Next steps
+- [X] setup Consul server cluster
+- [X] setup Consul client on Nomad servers and nodes
+- [X] auto cluster nomad using Consul
+- [X] register web service automatically on Consul
+- [X] do load balancing using Fabio
+- [ ] document new version that includes Consul
+- [ ] use Consul service mesh features
+  - [X] Service registration and discovery
+  - [ ] Service configuration
+  - [ ] Service segregation
+- [ ] Use TLS communication between Consul clients and servers
+- [ ] Use TLS communication between Nomad clients and servers
+- [ ] create Terraform script to provision all infrastructure
+  - [ ] VPC
+    - [ ] Internet Gateway
+      - [ ] Route table
+      - [ ] Route table assoc
+    - [ ] Public subnet
+      - [ ] NAT gateway
+      - [ ] Bastion host
+    - [ ] Private subnet
+      - [ ] ASG for Consul server
+      - [ ] ASG for Nomad server
+      - [ ] ASG for Nomad client
+      - [ ] LB for Nomad clients
+- [ ] Access web application running inside Nomad via LB
+- [ ] Run periodic jobs on Nomad
+
 ## Dependencies
 
 - docker
